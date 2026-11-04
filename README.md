@@ -18,6 +18,7 @@ See the brief for goals and requirements.
 ```
 photon-lab/
 ├── index.html
+├── legacy/photon-prototype.html   the original single-file PHOTON build, kept for reference
 ├── src/
 │   ├── core/
 │   │   ├── encoder.js
