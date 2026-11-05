@@ -1,84 +1,63 @@
-# Photon Lab v1 — Optical Communication Research Test Bench
+# Photon Lab
 
-Upgraded from the original single-file PHOTON prototype into a modular research platform for characterizing real-world screen → camera optical channels.
+A test bench for a screen-to-camera optical channel: a transmitter draws symbol
+grids on one screen, a receiver reads them with a camera, and every run is
+measured, logged and exportable.
 
-See the brief for goals and requirements.
+## Why it exists
 
-## Quick Start
+Screen-to-camera links fail in ways that are hard to argue about: rolling
+shutter, moire, tearing, focus, exposure, ambient light. To say anything useful
+about a coding scheme you need the same bench every time: known symbols, known
+framing, recorded results. Photon Lab is that bench, built from a single-file
+prototype and split into modules so each stage can be tested.
 
-1. Open `index.html` in a modern browser (Chrome recommended).
-2. Use **TX** tab to generate and transmit symbol grids (or open on a second screen/device).
-3. Use **RX** tab on the receiving device + camera.
-4. Auto-calibration detects magenta markers automatically.
-5. Run experiments from the Experiment panel.
-6. View live dashboard, heatmaps, FFT, and export sessions.
+## What you can do
 
-## Project Structure
+- **Transmit** symbol grids from the TX tab, on a second screen or a second
+  device.
+- **Receive** on the RX tab with a camera, and read the symbols back.
+- **Auto-calibrate** by detecting the magenta corner markers, so the receiver
+  finds the frame without being told where it is.
+- **Run experiments** from the experiment panel, with parameters recorded per run.
+- **Inspect** the live dashboard, heatmaps and FFT of the received signal.
+- **Export sessions** so results can be compared across runs.
 
-```
-photon-lab/
-├── index.html
-├── legacy/photon-prototype.html   the original single-file PHOTON build, kept for reference
-├── src/
-│   ├── core/
-│   │   ├── encoder.js
-│   │   ├── decoder.js
-│   │   ├── packet.js
-│   │   ├── modulation.js
-│   │   ├── checksum.js
-│   │   └── homography.js
-│   ├── camera/
-│   │   ├── cameraManager.js
-│   │   ├── calibration.js
-│   │   ├── markerDetection.js
-│   │   ├── tracking.js
-│   │   └── telemetry.js
-│   ├── experiments/
-│   │   ├── frequencySweep.js
-│   │   ├── densityTest.js
-│   │   ├── ...
-│   ├── analysis/
-│   │   ├── BER.js
-│   │   ├── SNR.js
-│   │   ├── heatmap.js
-│   │   ├── fft.js
-│   │   └── exporter.js
-│   ├── ai/
-│   │   ├── datasetCapture.js
-│   │   └── labeling.js
-│   ├── ui/
-│   │   ├── dashboard.js
-│   │   ├── charts.js
-│   │   └── controls.js
-│   └── main.js
-├── dataset/          # captured frames + labels
-└── docs/
+## Running it
+
+```bash
+# no build step
+open index.html     # Chrome recommended
 ```
 
-## Features Implemented
+Or serve the directory:
 
-- Modular clean architecture
-- Automatic calibration (magenta marker detection + homography)
-- Research dashboard with channel metrics (BER, SNR, throughput, etc.)
-- Experiment recording + JSON/CSV export
-- Experiment modes: Density, Frequency Sweep, Brightness, Blur, Motion
-- Heatmap visualization (live reliability map)
-- Optical spectrum / FFT analysis
-- Multiple modulation modes (RGB4, RGB8, Mono, Spatial, Analog)
-- AI dataset preparation hooks
-- Native-migration ready (pure logic separated from DOM/camera)
+```bash
+python3 -m http.server 8000
+```
 
-## Usage Notes
+Then: TX on one screen or device, RX on another with a camera, calibrate, and run
+an experiment. The receiver needs camera permission, which needs a secure origin
+(`localhost` counts, plain HTTP on a LAN address does not).
 
-- Designed as an instrument: data collection first.
-- Run TX on one display/device, RX + camera on another.
-- For single-device testing use the built-in loopback simulation option.
-- All data is local; export sessions for analysis/AI.
+## What is not here
 
-## Future
+- No result is a promise about throughput. The bench characterises a channel; it
+  does not claim a bitrate.
+- Calibration assumes the four magenta markers are visible. Occlude a corner and
+  the frame is not found.
+- `legacy/` holds the original single-file prototype, kept for comparison, not
+  maintained.
+- `android/` and `native/` are the platform experiments; the browser bench is the
+  part in daily use.
 
-Hooks for rolling shutter, learned codecs, etc. are present.
+## How it is built
 
-## Credits
-
-Refactored from original PHOTON prototype.
+```
+index.html      the bench: TX, RX, calibration, dashboard, experiments
+src/            the modules behind it
+native/         platform receivers
+android/        the Android experiment
+legacy/         the original single-file prototype
+docs/           brief, notes and results
+```
