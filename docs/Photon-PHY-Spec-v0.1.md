@@ -1,6 +1,6 @@
 # Photon Physical Layer (PHY) Specification v0.1
 
-**Status:** Draft — Experimental  
+**Status:** Draft - Experimental  
 **Date:** 2026-08-06  
 **Authors:** GraphicMiles Research  
 **Version:** 0.1 (Browser Characterization Baseline)
